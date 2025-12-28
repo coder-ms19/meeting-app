@@ -10,6 +10,7 @@ interface VideoGridProps {
     isMicOn: boolean;
     isCameraOn: boolean;
     pinnedId: string | null;
+    activeSpeakerId: string | null;
     onPin: (id: string) => void;
 }
 
@@ -20,6 +21,7 @@ export const VideoGrid = ({
     isMicOn,
     isCameraOn,
     pinnedId,
+    activeSpeakerId,
     onPin
 }: VideoGridProps) => {
 
@@ -27,14 +29,14 @@ export const VideoGrid = ({
     const totalTiles = participants.length + 1;
 
     const gridClassName = useMemo(() => {
-        if (pinnedId) return "flex gap-4 h-full"; // Spotlight layout treated differently
+        if (pinnedId) return "flex gap-2 md:gap-4 h-full"; // Spotlight layout treated differently
 
         // Basic Auto Grid
-        if (totalTiles === 1) return "grid grid-cols-1 place-items-center h-full p-8";
-        if (totalTiles === 2) return "grid grid-cols-1 md:grid-cols-2 gap-4 h-full p-4 items-center";
+        if (totalTiles === 1) return "grid grid-cols-1 place-items-center h-full p-2 md:p-8"; // Reduced padding on mobile
+        if (totalTiles === 2) return "grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 h-full p-2 md:p-4 items-center"; // Stack vertically on mobile, side-by-side on desktop
 
         // 3+ items
-        return "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 h-full p-4 content-center";
+        return "grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 h-full p-2 md:p-4 content-center"; // Ensure 2 cols on mobile for 3+ ppl to save space
     }, [totalTiles, pinnedId]);
 
 
@@ -64,9 +66,10 @@ export const VideoGrid = ({
                             stream={pinnedParticipant.stream}
                             userName={pinnedParticipant.name}
                             isLocal={false}
-                            isMuted={false} // Would need remote mute state
-                            isCameraOff={false} // Would need remote cam state
+                            isMuted={!pinnedParticipant.isMicOn}
+                            isCameraOff={!pinnedParticipant.isCameraOn}
                             isPinned={true}
+                            isActiveSpeaker={activeSpeakerId === pinnedParticipant.id}
                             onPin={() => onPin(pinnedParticipant.id)}
                             className="h-full w-full"
                         />
@@ -102,6 +105,9 @@ export const VideoGrid = ({
                                     stream={p.stream}
                                     userName={p.name}
                                     isLocal={false}
+                                    isMuted={!p.isMicOn}
+                                    isCameraOff={!p.isCameraOn}
+                                    isActiveSpeaker={activeSpeakerId === p.id}
                                     onPin={() => onPin(p.id)}
                                     className="h-full w-full"
                                 />
@@ -133,7 +139,10 @@ export const VideoGrid = ({
                         stream={p.stream}
                         userName={p.name}
                         isLocal={false}
+                        isMuted={!p.isMicOn}
+                        isCameraOff={!p.isCameraOn}
                         isPinned={pinnedId === p.id}
+                        isActiveSpeaker={activeSpeakerId === p.id}
                         onPin={() => onPin(p.id)}
                         className="h-full w-full"
                     />
