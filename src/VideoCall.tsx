@@ -247,7 +247,7 @@ export default function VideoCall({ roomId, userName }: VideoCallProps) {
       </div>
 
       {/* Main Grid Area */}
-      <div className="h-full w-full pb-24">
+      <div className="h-full w-full pb-0 md:pb-0">
         <VideoGrid
           participants={participants}
           localStream={stream}

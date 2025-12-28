@@ -232,7 +232,7 @@ export const PreJoinScreen = ({
                         />
                         <div className="flex flex-col text-left">
                             <span className="text-sm font-medium text-white">Built by Manish Keer</span>
-                            <span className="text-xs text-gray-400">Principal Engineer</span>
+                            <span className="text-xs text-gray-400">Software Engineer</span>
                         </div>
                     </div>
                 </div>
